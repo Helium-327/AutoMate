@@ -153,7 +153,7 @@ if not defined LOG_FILE (
         cmd /c start %WORKSPACES_PATH%
     )
     goto :mainMenu
-
+    
 :createUbuntuWorkspace
     setLOCAL enabledelayedexpansion
     set /p inputName="Please enter the workspace name: "
@@ -167,7 +167,7 @@ if not defined LOG_FILE (
             echo {
             echo     "folders": [
             echo         {
-            echo             "uri": "vscode-remote://%remoteAuthority%/mnt/d/AI_Research/WS-Hub/Wsl-%inputName%"
+            echo             "uri": "vscode-remote://%remoteAuthority%/%PROJECT_WSL_ROOT_PATH%/Wsl-%inputName%"
             echo         }
             echo     ],
             echo     "remoteAuthority": "%remoteAuthority%",
