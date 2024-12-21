@@ -125,7 +125,7 @@ if not defined LOG_FILE (
     echo ::::::::::::::::::::::::::::::::::::::::
     echo ::      Create Windows Workspace      ::
     echo ::::::::::::::::::::::::::::::::::::::::
-    set /p inputName="Please enter the workspace name: "
+    set /p inputName="Please give the workspace's name: "
     set WORKSPACE_NAME=%inputName%.code-workspace
     set WORKSPACES_PATH=%WORKSPACE_ROOT_PATH%\\%WORKSPACE_NAME%
     set FOLDER_PATH=%PROJECT_ROOT_PATH%\\Wins-%inputName%
@@ -155,16 +155,15 @@ if not defined LOG_FILE (
        
         cmd /c start %WORKSPACES_PATH%
     )
-    set /p answer="go on?(1.press any---yes, 2.m---mian menu, 3.q---quit)"
-    if /i "%answer%"=="m" (
-        goto :mainMenu
+    set /p answer="Go on? (1 for yes, 2 for main menu, 3 to quit): "
+    if /i "%answer%"=="1" (
+        goto :createWindowsWorkspace
     ) else if /i "%answer%"=="2" (
         goto :mainMenu
-    ) else if /i "%answer%"=="q" (
-        exit /b 1
     ) else if /i "%answer%"=="3" (
         exit /b 1
     ) else (
+        echo Invalid input.
         goto :createWindowsWorkspace
     )
 
@@ -173,7 +172,7 @@ if not defined LOG_FILE (
     echo ::::::::::::::::::::::::::::::::::::::::
     echo ::      Create Ubuntu Workspace       ::
     echo ::::::::::::::::::::::::::::::::::::::::
-    set /p inputName="Please enter the workspace name: "
+    set /p inputName="Please input the workspace's name: "
     set WORKSPACE_NAME=%inputName%.code-workspace
     set WORKSPACES_PATH=%WORKSPACE_ROOT_PATH%\\%WORKSPACE_NAME%
     set FOLDER_PATH=%PROJECT_ROOT_PATH%\\Linux-%inputName%
@@ -201,16 +200,15 @@ if not defined LOG_FILE (
         echo Please try to run the workspace.
         
     )
-    set /p answer="go on?(1.press any---yes, 2.m---mian menu, 3.q---quit)"
-    if /i "%answer%"=="m" (
-        goto :mainMenu
+    set /p answer="Go on? (1 for yes, 2 for main menu, 3 to quit): "
+    if /i "%answer%"=="1" (
+        goto :createUbuntuWorkspace
     ) else if /i "%answer%"=="2" (
         goto :mainMenu
-    ) else if /i "%answer%"=="q" (
-        exit /b 1
     ) else if /i "%answer%"=="3" (
         exit /b 1
     ) else (
+        echo Invalid input.
         goto :createUbuntuWorkspace
     )
 endlocal
@@ -232,7 +230,7 @@ exit /b 0
         echo !count!. !name!
     )
     echo ================================
-    set /p inputName="Please enter the workspace name (or q to back): "
+    set /p inputName="Please input the workspace's name (or q to back): "
 
     if "%inputName%"=="q" goto :mainMenu
 
@@ -246,16 +244,15 @@ exit /b 0
         echo Please create a new first.
         
     )
-    set /p answer="go on?(1.press any---yes, 2.m---mian menu, 3.q---quit)"
-    if /i "%answer%"=="m" (
-        goto :mainMenu
+    set /p answer="Go on? (1 for yes, 2 for main menu, 3 to quit): "
+    if /i "%answer%"=="1" (
+        goto :runWorkspace
     ) else if /i "%answer%"=="2" (
         goto :mainMenu
-    ) else if /i "%answer%"=="q" (
-        exit /b 1
     ) else if /i "%answer%"=="3" (
         exit /b 1
     ) else (
+        echo Invalid input.
         goto :runWorkspace
     )
 
@@ -280,24 +277,23 @@ exit /b 0
 
     if "%inputName%"=="q" goto :mainMenu
 
-    set WINS_FOLDER_PATH=%PROJECT_ROOT_PATH%\Wins-%inputName%
-    set LINUX_FOLDER_PATH=%PROJECT_ROOT_PATH%\Linux-%inputName%
+    set WINS_FOLDER_PATH=%PROJECT_ROOT_PATH%\\Wins-%inputName%
+    set LINUX_FOLDER_PATH=%PROJECT_ROOT_PATH%\\Linux-%inputName%
     set WORKSPACE_NAME=%inputName%.code-workspace
     set WORKSPACES_PATH=%WORKSPACE_ROOT_PATH%\%WORKSPACE_NAME%
-
-    echo Terget project path:       %FOLDER_PATH%
-    echo Terget workspace path:     %WORKSPACES_PATH%
-    echo Terget workspace Name:     %WORKSPACE_NAME%
+    
+    echo Target project path:       "%WINS_FOLDER_PATH%" nor "%LINUX_FOLDER_PATH%"
+    echo Target workspace path:     "%WORKSPACES_PATH%"
+    echo Target workspace Name:     "%WORKSPACE_NAME%"
 
     echo ================================
     if exist %WORKSPACES_PATH% (
-        del /f "%WORKSPACES_PATH%"
+        del /f %WORKSPACES_PATH%
         echo [%DATE% %TIME%] Deleted workspace: %WORKSPACE_NAME% >> %LOG_FILE%
         echo Workspace: "%WORKSPACES_PATH%" deleted.
         
     ) else (
-        echo error: "%WORKSPACES_PATH%" does not exist.
-       
+        echo error: "%WORKSPACES_PATH%" does not exist. 
     )
 
     if exist "%WINS_FOLDER_PATH%" (
@@ -309,18 +305,30 @@ exit /b 0
         echo [%DATE% %TIME%] Deleted project directory: %LINUX_FOLDER_PATH% >> %LOG_FILE%
         echo Project: "%LINUX_FOLDER_PATH%" deleted.
     ) else (
-        echo error: "%FOLDER_PATH%" does not exist.
+        echo error: Neither "%WINS_FOLDER_PATH%" nor "%LINUX_FOLDER_PATH%" exists.
     )
-    set /p answer="go on?(1.press any---yes, 2.m---mian menu, 3.q---quit)"
-    if /i "%answer%"=="m" (
-        goto :mainMenu
+    set /p answer="Go on? (1 for yes, 2 for main menu, 3 to quit): "
+    if /i "%answer%"=="1" (
+        cls
+        setlocal enabledelayedexpansion
+        echo ================================
+        echo Current workspaces:
+        set count=0
+        for %%i in (%WORKSPACE_ROOT_PATH%\*.code-workspace) do (
+            set /a count+=1
+            set name=%%~ni
+            echo !count!. !name!
+        )
+        echo ================================
+        endlocal
+        pause
+        goto :deleteWorkspace
     ) else if /i "%answer%"=="2" (
         goto :mainMenu
-    ) else if /i "%answer%"=="q" (
-        exit /b 1
     ) else if /i "%answer%"=="3" (
         exit /b 1
     ) else (
+        echo Invalid input.
         goto :deleteWorkspace
     )
     
